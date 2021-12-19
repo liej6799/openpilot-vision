@@ -9,6 +9,7 @@ using namespace cv;
 
 int main()
 {
+
     string VideoPath = getenv("VIDEOPATH");
     string ModelPath = getenv("MODELPATH");
     string ModelParamPath = ModelPath + "dmonitoring_model-opt-fp16.param";
@@ -17,29 +18,18 @@ int main()
 
     DMonitoringModel detector = DMonitoringModel(ModelParamPath.c_str(), ModelBinPath.c_str());
 
-    // Enable Opencv Video Capture
+    // Enable Opencv Video Captur
 
-    cout << VideoPath;
+    Mat image;
     VideoCapture cap(VideoPath);
-
-    // Check if camera opened successfully
-    if(!cap.isOpened()){
-   	    cout << "Error opening video stream" << endl;
-        return -1;
-    }
 
     while(1){
 
-        Mat frame;
-        // Capture frame-by-frame
-        cap >> frame;
-    
-        // If the frame is empty, break immediately
-        if (frame.empty())
-            break;
+        cap >> image;
 
+        auto result = detector.detect(image);
         // Display the resulting frame
-        imshow( "Frame", frame );
+        imshow( "image", image );
 
         // Press  ESC on keyboard to exit
         char c=(char)waitKey(25);
